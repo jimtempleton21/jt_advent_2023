@@ -1,0 +1,51 @@
+#! /usr/bin/env bash
+
+#---------Day 1 Part 1---------
+filename='day1.txt'
+numbers=("one" "two" "three" "four" "five" "six" "seven" "eight" "nine")
+
+
+part1=0
+n=0
+while read line || [ -n "$line" ]; do
+digit=$(echo $line | tr -d -c 0-9)
+first_char="${digit:0:1}"
+last_char="${digit:(-1)}"
+first=$(expr $first_char \* 10)
+total=$(expr $first + $last_char)
+part1=$((part1+total))
+n=$((n+1))
+done < $filename
+
+echo Day 1 Part 1: "${part1}"
+
+#---------Day 1 Part 2---------
+n=1
+total=0
+part2=0
+first=0
+while read line || [ -n "$line" ]; do
+x=1
+for str in ${numbers[@]}; do
+	var=0
+	if [[ "$first_char" -ne "$x" ]]; then
+		var=$(echo "$line" | grep -o "$str" | wc -l)
+			if [[ ${var} -gt 0 ]]; then
+				if [[ "$line" == *"$str"* ]]; then
+					for (( i = 1; i <= $var; i++ )) do
+						line="${line/$str/$x}"
+					done
+				fi
+			fi
+	fi
+	x=$((x+1))
+done
+digit=$(echo $line | tr -d -c 0-9)
+first_char="${digit:0:1}"
+last_char="${digit:(-1)}"
+first=$(expr $first_char \* 10)
+total=$(expr $first + $last_char)
+part2=$((part2+total))
+n=$((n+1))
+done < $filename
+echo Day 1 Part 2: "${part2}"
